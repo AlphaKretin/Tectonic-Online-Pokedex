@@ -1,5 +1,5 @@
 let repo = "AlphaKretin/Tectonic-Online-Pokedex";
-let version = "rrdex release 1.1.2.9";
+let version = "masterdex alpha 0.0.2";
 
 let species = null;
 let sprites = null;
