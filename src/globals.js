@@ -23,15 +23,13 @@ let filters = {};
 let scrollIntoView = true;
 
 function fullSpeciesName(key) {
-	let mon = species[key];
-	let output = "";
-	if (mon.family.variant)
-		output += regions[mon.family.region].variant + " ";
-	
-	output += species[key].name;
-	
-	if (mon.family.form)
-		output += " " + mon.family.form;
-	
-	return output;
+  let mon = species[key];
+  let output = "";
+  if (mon.family.variant) output += regions[mon.family.region].variant + " ";
+
+  output += species[key].name;
+
+  if (mon.family.form) output += " " + mon.family.form;
+
+  return output;
 }
