@@ -1,4 +1,4 @@
-let repo = "JwowSquared/Radical-Red-Pokedex";
+let repo = "AlphaKretin/Tectonic-Online-Pokedex";
 let version = "rrdex release 1.1.2.9";
 
 let species = null;
