@@ -439,6 +439,7 @@ function buildWrapperCoverageDefensive(
 
   let coverage = {};
   for (const key in primary.defensive) {
+    if (key === "MUTANT") continue; // hide mutant type for spoilers and neatness
     let matchup = primary.defensive[key];
     if (secondary) matchup *= secondary.defensive[key];
     matchups.append(buildWrapperTypeMatchup(key, matchup));
