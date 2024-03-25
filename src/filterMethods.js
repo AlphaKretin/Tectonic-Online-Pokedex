@@ -7,17 +7,6 @@ let categoryWrapper = document.getElementById("speciesFilterCategoryWrapper");
 let selectedFilter = null;
 
 function setupFilters() {
-  let toggles = {
-    CHANGED: { name: "Changed" },
-    LEVELUP: { name: "Levelup" },
-    EVOLVED: { name: "Evolved" },
-    EVIOLITE: { name: "Eviolite" },
-    HARDCORE: { name: "Hardcore" },
-    ONLYNEW: { name: "Only New" },
-    REGIONAL: { name: "Regional" },
-    MEGA: { name: "Mega" },
-  };
-
   let filterConfigs = [
     ["Name", filterName, 1, species],
     ["Type", filterType, 2, types],
@@ -25,7 +14,6 @@ function setupFilters() {
     ["Move Type", filterMoveType, 1, types],
     ["Ability", filterAbilities, 1, abilities],
     ["Held Item", filterHeldItem, 1, heldItems],
-    ["Toggle", filterToggle, 7, toggles],
   ];
 
   for (const [name, filter, max, library] of filterConfigs) {
@@ -40,7 +28,6 @@ function setupFilters() {
   filters["Held Item"].options.sort(sortByName);
   for (const option of filters["Name"].options)
     option[1] = fullSpeciesName(option[0]);
-  filters["Toggle"].toggles = {};
 
   selectFilterCategory.value = filterConfigs[0][0];
   let options = filterConfigs.map((x) => x[0]);
@@ -158,13 +145,6 @@ function filterMove(option) {
     return false;
   };
 
-  let toggles = filters["Toggle"].toggles;
-  if (toggles.LEVELUP)
-    func = (x) =>
-      species[x].learnset.levelup.find((y) => y[0] === option[0]) ||
-      (species[x].learnset.prevo &&
-        species[x].learnset.prevo.find((y) => y[0] === option[0]));
-
   addFilter(filter, option, func);
 }
 
@@ -194,12 +174,6 @@ function filterMoveType(option) {
     return false;
   };
 
-  let toggles = filters["Toggle"].toggles;
-  if (toggles.LEVELUP)
-    func = (x) =>
-      species[x].learnset.levelup.find((y) => moves[y[0]].type === option[0]) ||
-      species[x].learnset.prevo.find((y) => moves[y[0]].type === option[0]);
-
   addFilter(filter, option, func);
 }
 
@@ -224,58 +198,6 @@ function filterHeldItem(option) {
     (species[x].items.common === option[0] ||
       species[x].items.rare === option[0]);
   addFilter(filters["Held Item"], option, func);
-}
-
-function filterToggle(option) {
-  let filter = filters["Toggle"];
-  let toggles = filter.toggles;
-
-  let func = (x) => true;
-  if (option[0] === "CHANGED") func = (x) => species[x].changelog != null;
-  else if (option[0] === "EVOLVED") func = (x) => !species[x].family.evolutions;
-  else if (option[0] === "REGIONAL")
-    func = (x) =>
-      species[x].family.forms &&
-      species[species[x].family.forms[0]].family.region !==
-        species[x].family.region;
-  else if (option[0] === "MEGA")
-    func = (x) =>
-      species[x].family.form && species[x].family.form.includes("Mega");
-  else if (option[0] === "EVIOLITE")
-    func = (x) =>
-      species[x].family.evolutions &&
-      species[x].family.evolutions.filter((x) => !(x[0] === "MEGA")).length > 0;
-
-  if (toggles[option[0]] === true) {
-    toggles[option[0]] = false;
-    removeFilter(filter, option);
-  } else {
-    toggles[option[0]] = true;
-    addFilter(filter, option, func);
-    filters.active[option[0]].tag.onclick = function () {
-      toggles[option[0]] = false;
-      if (
-        option[0] === "EVOLVED" ||
-        option[0] === "HARDCORE" ||
-        option[0] === "ONLYNEW"
-      )
-        if (option[0] === "LEVELUP") {
-          filterMove("RECALC");
-          filterMoveType("RECALC");
-        }
-      removeFilter(filter, option);
-    };
-  }
-
-  if (
-    option[0] === "EVOLVED" ||
-    option[0] === "HARDCORE" ||
-    option[0] === "ONLYNEW"
-  )
-    if (option[0] === "LEVELUP") {
-      filterMove("RECALC");
-      filterMoveType("RECALC");
-    }
 }
 
 function addFilter(filter, option, func) {
