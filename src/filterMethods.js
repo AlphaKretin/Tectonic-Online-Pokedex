@@ -20,14 +20,11 @@ function setupFilters() {
 
   let filterConfigs = [
     ["Name", filterName, 1, species],
-    ["Region", filterRegion, 1, regions],
     ["Type", filterType, 2, types],
     ["Move", filterMove, 4, moves],
     ["Move Type", filterMoveType, 1, types],
     ["Ability", filterAbilities, 1, abilities],
-    ["Egg Group", filterEggGroup, 1, eggGroups],
     ["Held Item", filterHeldItem, 1, heldItems],
-    ["Level Cap", filterLevelCap, 1, caps],
     ["Toggle", filterToggle, 7, toggles],
   ];
 
@@ -40,7 +37,6 @@ function setupFilters() {
   }
   filters["Move"].options.sort(sortByName);
   filters["Ability"].options.sort(sortByName);
-  filters["Egg Group"].options.sort(sortByName);
   filters["Held Item"].options.sort(sortByName);
   for (const option of filters["Name"].options)
     option[1] = fullSpeciesName(option[0]);
@@ -230,46 +226,13 @@ function filterHeldItem(option) {
   addFilter(filters["Held Item"], option, func);
 }
 
-function filterLevelCap(option) {
-  let filter = filters["Level Cap"];
-
-  if (option === "RECALC") {
-    let activeFilters = [...filter.active];
-    for (const activeFilter of activeFilters) filterLevelCap(activeFilter);
-    return;
-  }
-
-  let toggles = filters["Toggle"].toggles;
-
-  let difficulty = "normal";
-  if (toggles.HARDCORE) difficulty = "hardcore";
-
-  if (toggles.ONLYNEW) func = (x) => species[x].cap[difficulty] == option[0];
-  else func = (x) => species[x].cap[difficulty] <= option[0];
-
-  if (toggles.EVOLVED)
-    filters.active.EVOLVED.func = (x) =>
-      !("evolutions" in species[x].family) ||
-      !species[x].family.evolutions.find(
-        (y) => species[y[2]].cap[difficulty] <= option[0]
-      );
-
-  addFilter(filter, option, func);
-  filters.active[option[0]].tag.onclick = function () {
-    if (toggles.EVOLVED)
-      filters.active.EVOLVED.func = (x) => !species[x].family.evolutions;
-    removeFilter(filter, option);
-  };
-}
-
 function filterToggle(option) {
   let filter = filters["Toggle"];
   let toggles = filter.toggles;
 
   let func = (x) => true;
   if (option[0] === "CHANGED") func = (x) => species[x].changelog != null;
-  else if (option[0] === "EVOLVED" && filters["Level Cap"].active.length === 0)
-    func = (x) => !species[x].family.evolutions;
+  else if (option[0] === "EVOLVED") func = (x) => !species[x].family.evolutions;
   else if (option[0] === "REGIONAL")
     func = (x) =>
       species[x].family.forms &&
@@ -296,11 +259,10 @@ function filterToggle(option) {
         option[0] === "HARDCORE" ||
         option[0] === "ONLYNEW"
       )
-        filterLevelCap("RECALC");
-      if (option[0] === "LEVELUP") {
-        filterMove("RECALC");
-        filterMoveType("RECALC");
-      }
+        if (option[0] === "LEVELUP") {
+          filterMove("RECALC");
+          filterMoveType("RECALC");
+        }
       removeFilter(filter, option);
     };
   }
@@ -310,11 +272,10 @@ function filterToggle(option) {
     option[0] === "HARDCORE" ||
     option[0] === "ONLYNEW"
   )
-    filterLevelCap("RECALC");
-  if (option[0] === "LEVELUP") {
-    filterMove("RECALC");
-    filterMoveType("RECALC");
-  }
+    if (option[0] === "LEVELUP") {
+      filterMove("RECALC");
+      filterMoveType("RECALC");
+    }
 }
 
 function addFilter(filter, option, func) {

@@ -112,7 +112,6 @@ function displaySpeciesPanel(mon) {
       types[mon.type.primary],
       types[mon.type.secondary]
     ),
-    buildWrapperCap("div", "infoCap", mon.cap),
     buildWrapperHeldItems("div", "infoItems", mon.items),
     buildWrapperEggGroups("div", "infoEggGroups", mon.family.eggGroup)
   );
@@ -185,7 +184,6 @@ function buildWrapperTypes(tag, className, primary, secondary = null) {
 
 function buildWrapperAbilities(tag, className, a) {
   let wrapper = buildWrapper(tag, className + "Wrapper");
-
   if (a.primary)
     wrapper.append(
       buildWrapper("div", className + "Primary", abilities[a.primary].name)
@@ -462,57 +460,6 @@ function buildWrapperTypeMatchup(key, matchup) {
       matchup + "x"
     )
   );
-
-  return wrapper;
-}
-
-function buildWrapperCap(tag, className, cap) {
-  let wrapper = buildWrapper(tag, className + "Wrapper");
-
-  wrapper.append(buildWrapper("div", "infoCapLabel", "Availability"));
-  if (cap.locations) {
-    for (const [key, method] of cap.locations) {
-      wrapper.append(
-        buildWrapper(
-          "div",
-          className,
-          locations[key].name + " " + locations[key][method].name
-        )
-      );
-    }
-  } else {
-    wrapper.append(buildWrapper("div", className, "Unobtainable in the wild."));
-  }
-
-  wrapper.append(buildWrapper("div", "infoCapLabel", "Level Cap"));
-
-  if ("normal" in cap) {
-    wrapper.append(
-      buildWrapper(
-        "div",
-        className,
-        "Available on Normal " + caps[cap.normal].name + "."
-      )
-    );
-  } else {
-    wrapper.append(
-      buildWrapper("div", className, "Unobtainable on Normal Difficulty.")
-    );
-  }
-
-  if ("hardcore" in cap) {
-    wrapper.append(
-      buildWrapper(
-        "div",
-        className,
-        "Available on Hardcore " + caps[cap.hardcore].name + "."
-      )
-    );
-  } else {
-    wrapper.append(
-      buildWrapper("div", className, "Unobtainable on Hardcore Difficulty.")
-    );
-  }
 
   return wrapper;
 }

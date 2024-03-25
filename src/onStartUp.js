@@ -1,18 +1,6 @@
 async function fetchData() {
-  let request = new Request(
-    `https://raw.githubusercontent.com/${repo}/master/data.json`
-  );
-  let response = null;
-  if (typeof caches !== "undefined") {
-    const cache = await caches.open(version);
-
-    response = await cache.match(request);
-    if (!response) {
-      response = await fetch(request);
-      await cache.put(request, response);
-    }
-    response = await cache.match(request);
-  } else response = await fetch(request);
+  let request = "../data.json";
+  let response = await fetch(request);
 
   let data = await response.json();
   species = data.species;
@@ -26,7 +14,6 @@ async function fetchData() {
   heldItems = data.heldItems;
   sprites = data.sprites;
   flags = data.flags;
-  caps = data.caps;
   evolutions = data.evolutions;
   regions = data.regions;
   stats = data.stats;

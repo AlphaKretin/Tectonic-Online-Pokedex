@@ -1,5 +1,5 @@
 let repo = "AlphaKretin/Tectonic-Online-Pokedex";
-let version = "masterdex alpha 0.0.2";
+let version = "masterdex alpha 0.0.3";
 
 let species = null;
 let sprites = null;
@@ -7,7 +7,6 @@ let abilities = null;
 let moves = null;
 let locations = null;
 let types = null;
-let caps = null;
 let eggGroups = null;
 let evolutionItems = null;
 let heldItems = null;
